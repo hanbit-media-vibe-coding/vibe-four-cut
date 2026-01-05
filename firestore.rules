@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function: Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function: Check if user owns the resource
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // ==================== Users Collection ====================
+    // users/{userId}
+    match /users/{userId} {
+      // 본인 정보는 읽기/쓰기 가능
+      allow read, write: if isOwner(userId);
+      // 회원가입 시 본인 문서 생성 가능
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // ==================== Diaries Collection ====================
+    // diaries/{diaryId}
+    match /diaries/{diaryId} {
+      // 본인 일기는 읽기/쓰기 가능
+      allow read, write: if isAuthenticated() && isOwner(resource.data.userId);
+      // 일기 생성 시 본인 userId로만 생성 가능
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId;
+    }
+    
+    // ==================== Scenarios Collection ====================
+    // scenarios/{scenarioId}
+    match /scenarios/{scenarioId} {
+      // 본인 시나리오는 읽기/쓰기 가능
+      allow read, write: if isAuthenticated() && isOwner(resource.data.userId);
+      // 시나리오 생성 시 본인 userId로만 생성 가능
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId;
+    }
+    
+    // ==================== Comics Collection ====================
+    // comics/{comicId}
+    match /comics/{comicId} {
+      // 본인 만화는 읽기/쓰기 가능
+      allow read, write: if isAuthenticated() && isOwner(resource.data.userId);
+      // 만화 생성 시 본인 userId로만 생성 가능
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId;
+    }
+  }
+}

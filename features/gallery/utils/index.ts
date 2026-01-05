@@ -1,0 +1,2 @@
+// Gallery feature utility functions
+

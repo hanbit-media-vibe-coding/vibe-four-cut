@@ -1,0 +1,31 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper function: Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function: Check if user owns the resource
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // ==================== User Profile Images ====================
+    // users/{userId}/profile/{filename}
+    match /users/{userId}/profile/{filename} {
+      // 본인 프로필 이미지는 읽기/쓰기 가능
+      allow read, write: if isOwner(userId);
+    }
+    
+    // ==================== Comic Images ====================
+    // comics/{userId}/{comicId}/scene-{1-4}.jpg
+    match /comics/{userId}/{comicId}/{sceneFile} {
+      // 인증된 사용자는 모든 만화 이미지 읽기 가능 (갤러리 공유 기능 대비)
+      allow read: if isAuthenticated();
+      // 본인 만화 이미지만 업로드/수정/삭제 가능
+      allow write: if isOwner(userId);
+    }
+  }
+}
+
