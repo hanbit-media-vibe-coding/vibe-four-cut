@@ -45,17 +45,7 @@
     "plugins": [
       "expo-web-browser",
       "@react-native-firebase/app",
-      [
-        "expo-build-properties",
-        {
-          "ios": {
-            "useFrameworks": "static",
-            "podfileProperties": {
-              "useModularHeaders": true
-            }
-          }
-        }
-      ]
+      "./plugins/withModularHeaders"
     ],
     "extra": {
       "eas": {
