@@ -44,11 +44,15 @@
     },
     "plugins": [
       "expo-web-browser",
+      "@react-native-firebase/app",
       [
-        "@react-native-firebase/app",
+        "expo-build-properties",
         {
           "ios": {
-            "useFrameworks": "static"
+            "useFrameworks": "static",
+            "podfileProperties": {
+              "useModularHeaders": true
+            }
           }
         }
       ]
