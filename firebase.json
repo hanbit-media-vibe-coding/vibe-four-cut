@@ -7,5 +7,9 @@
   },
   "storage": {
     "rules": "storage.rules"
+  },
+  "react-native": {
+    "analytics_auto_collection_enabled": true,
+    "google_analytics_automatic_screen_reporting_enabled": true
   }
 }
