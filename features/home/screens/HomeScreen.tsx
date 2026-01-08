@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
+import { HomeEvents } from '../../../shared/utils/analytics';
 
 interface HomeScreenProps {
   onWriteDiary?: () => void;
@@ -18,6 +19,25 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onViewGallery,
   onMyPage,
 }) => {
+  useEffect(() => {
+    HomeEvents.homeView();
+  }, []);
+
+  const handleWriteDiary = () => {
+    HomeEvents.writeDiaryButtonClick();
+    onWriteDiary?.();
+  };
+
+  const handleViewGallery = () => {
+    HomeEvents.viewGalleryButtonClick();
+    onViewGallery?.();
+  };
+
+  const handleMyPage = () => {
+    HomeEvents.myPageButtonClick();
+    onMyPage?.();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* 마이페이지 버튼 */}
@@ -25,7 +45,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         <View style={styles.topBar}>
           <TouchableOpacity
             style={styles.myPageButton}
-            onPress={onMyPage}
+            onPress={handleMyPage}
             activeOpacity={0.7}
           >
             <Text style={styles.myPageButtonText}>⚙️</Text>
@@ -45,7 +65,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.button, styles.primaryButton]}
-            onPress={onWriteDiary}
+            onPress={handleWriteDiary}
             activeOpacity={0.8}
           >
             <Text style={styles.primaryButtonText}>오늘의 일기 쓰기</Text>
@@ -53,7 +73,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
           <TouchableOpacity
             style={[styles.button, styles.secondaryButton]}
-            onPress={onViewGallery}
+            onPress={handleViewGallery}
             activeOpacity={0.8}
           >
             <Text style={styles.secondaryButtonText}>내 만화 갤러리 보기</Text>

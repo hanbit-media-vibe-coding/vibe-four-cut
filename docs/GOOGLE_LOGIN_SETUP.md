@@ -191,3 +191,6 @@ vibe-four-cut/
 - [Firebase Authentication 문서](https://firebase.google.com/docs/auth)
 - [EAS Build 문서](https://docs.expo.dev/build/introduction/)
 
+
+
+

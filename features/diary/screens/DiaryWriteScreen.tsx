@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { checkTodayDiaryExists } from '../utils/firestoreService';
 import { COMIC_STYLES, ComicStyle } from '../types';
+import { DiaryEvents } from '../../../shared/utils/analytics';
 
 interface DiaryWriteScreenProps {
   userId?: string;
@@ -34,6 +35,9 @@ export const DiaryWriteScreen: React.FC<DiaryWriteScreenProps> = ({
 
   // 화면 진입 시 오늘 일기 존재 여부 확인 (임시 비활성화)
   useEffect(() => {
+    // 화면 조회 이벤트
+    DiaryEvents.diaryWriteView();
+    
     // 하루 한 번 제한 기능 임시 비활성화
     setIsCheckingDiary(false);
     
@@ -105,6 +109,9 @@ export const DiaryWriteScreen: React.FC<DiaryWriteScreenProps> = ({
     //   }
     // }
 
+    // 일기 제출 이벤트
+    DiaryEvents.diarySubmit(diaryContent.trim().length, selectedStyle);
+    
     onSubmit?.(diaryContent.trim(), selectedStyle);
   };
 
@@ -194,7 +201,10 @@ export const DiaryWriteScreen: React.FC<DiaryWriteScreenProps> = ({
                     styles.styleOption,
                     selectedStyle === style.value && styles.styleOptionSelected,
                   ]}
-                  onPress={() => setSelectedStyle(style.value)}
+                  onPress={() => {
+                    setSelectedStyle(style.value);
+                    DiaryEvents.comicStyleSelect(style.value);
+                  }}
                   activeOpacity={0.7}
                   disabled={isSubmitting}
                 >

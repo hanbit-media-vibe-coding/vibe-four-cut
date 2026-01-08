@@ -7,6 +7,7 @@ import { LoginScreen, RegisterScreen, MyPageScreen } from '../../features/auth';
 import { useAuth } from '../../shared/contexts/AuthContext';
 import { signOut } from '../../features/auth/utils/authService';
 import { ComicStyle } from '../../features/diary/types';
+import { ComicEvents } from '../../shared/utils/analytics';
 
 type Screen = 'login' | 'register' | 'home' | 'diary-write' | 'loading' | 'comic-result' | 'gallery' | 'comic-detail' | 'mypage' | 'edit-nickname';
 
@@ -159,6 +160,9 @@ export const AppRouter: React.FC = () => {
     try {
       const userId = user?.uid || `user-${Date.now()}`;
       
+      // 만화 생성 시작 이벤트
+      ComicEvents.comicGenerationStart(selectedStyle);
+      
       // 1. 시나리오 생성 및 저장
       const { createScenarioFromDiary } = await import('../../features/diary/utils/scenarioService');
       const scenarioResult = await createScenarioFromDiary(userId, diaryContent);
@@ -177,6 +181,9 @@ export const AppRouter: React.FC = () => {
       );
       
       console.log('만화 생성 완료:', comicResult);
+      
+      // 만화 생성 완료 이벤트
+      ComicEvents.comicGenerationComplete(selectedStyle, true);
       
       // 3. 감정 문장 생성
       let emotionSentence = '오늘 하루도 수고했어요.';
@@ -204,6 +211,10 @@ export const AppRouter: React.FC = () => {
       setCurrentScreen('comic-result');
     } catch (error: any) {
       console.error('만화 생성 실패:', error);
+      
+      // 만화 생성 실패 이벤트
+      ComicEvents.comicGenerationFailure(error?.message || 'unknown');
+      ComicEvents.comicGenerationComplete(selectedStyle, false);
       
       if (error?.name === 'QuotaExceededError' || error?.error?.code === 429) {
         console.warn('할당량 초과로 인해 더미 데이터를 표시합니다.');

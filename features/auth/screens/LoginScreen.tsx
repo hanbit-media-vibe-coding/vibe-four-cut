@@ -11,6 +11,7 @@ import {
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 import { signInWithGoogleIdToken, GOOGLE_CONFIG } from '../utils/authService';
+import { AuthEvents } from '../../../shared/utils/analytics';
 
 // WebBrowser 세션 완료 처리 (Android에서 필요)
 WebBrowser.maybeCompleteAuthSession();
@@ -42,9 +43,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             setIsLoading(true);
             const result = await signInWithGoogleIdToken(authentication.idToken);
             console.log('로그인 성공:', result.user.email);
+            AuthEvents.loginSuccess('google');
             onLoginSuccess?.(result.isNewUser);
           } catch (error: any) {
             console.error('로그인 처리 실패:', error);
+            AuthEvents.loginFailure(error.message || 'unknown');
             Alert.alert(
               '로그인 실패',
               error.message || '로그인 중 문제가 발생했습니다. 다시 시도해주세요.',
@@ -64,6 +67,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
         }
       } else if (response?.type === 'error') {
         console.error('Google 인증 에러:', response.error);
+        AuthEvents.loginFailure(response.error?.message || 'google_auth_error');
         Alert.alert(
           '인증 실패',
           'Google 인증에 실패했습니다. 다시 시도해주세요.',
@@ -92,9 +96,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
 
     try {
       setIsLoading(true);
+      AuthEvents.loginStart();
       await promptAsync();
     } catch (error) {
       console.error('Google 로그인 시작 실패:', error);
+      AuthEvents.loginFailure('login_start_failed');
       Alert.alert(
         '오류',
         '로그인을 시작할 수 없습니다. 다시 시도해주세요.',

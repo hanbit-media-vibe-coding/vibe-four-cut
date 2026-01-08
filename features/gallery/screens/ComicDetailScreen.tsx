@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { ComicListItem } from '../utils/galleryService';
+import { logScreenView } from '../../../shared/utils/analytics';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const COMIC_PADDING = 20;
@@ -26,6 +27,10 @@ export const ComicDetailScreen: React.FC<ComicDetailScreenProps> = ({
 }) => {
   // 단일 이미지 URL 또는 배열의 첫 번째 이미지 사용
   const imageUrl = comic?.imageUrl || comic?.imageUrls?.[0] || '';
+
+  useEffect(() => {
+    logScreenView('comic_detail', { comic_id: comic?.id });
+  }, [comic?.id]);
 
   const formatDate = (date: Date): string => {
     const year = date.getFullYear();

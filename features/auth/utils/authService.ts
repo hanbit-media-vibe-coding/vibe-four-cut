@@ -12,6 +12,7 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 import { auth, firestore } from '../../../shared/config/firebase';
+import { AuthEvents } from '../../../shared/utils/analytics';
 
 // 사용자 데이터 타입
 export interface UserData {
@@ -168,6 +169,7 @@ export async function updateLastLogin(uid: string): Promise<void> {
 export async function signOut(): Promise<void> {
   try {
     await firebaseSignOut(auth);
+    AuthEvents.logout();
     console.log('로그아웃 완료');
   } catch (error) {
     console.error('로그아웃 실패:', error);

@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { saveUserNickname } from '../utils/authService';
+import { AuthEvents } from '../../../shared/utils/analytics';
 
 interface RegisterScreenProps {
   userId?: string;
@@ -49,6 +50,12 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
       await saveUserNickname(userId, nickname.trim());
       
       console.log('닉네임 저장 완료:', nickname.trim());
+      
+      // 회원가입 완료 이벤트 (수정 모드가 아닐 때만)
+      if (!isEditMode) {
+        AuthEvents.signupComplete();
+      }
+      
       onSubmit?.(nickname.trim());
     } catch (error) {
       console.error('닉네임 저장 실패:', error);

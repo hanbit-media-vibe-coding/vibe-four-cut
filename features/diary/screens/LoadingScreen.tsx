@@ -7,6 +7,7 @@ import {
   Animated,
   ActivityIndicator,
 } from 'react-native';
+import { logScreenView } from '../../../shared/utils/analytics';
 
 interface LoadingScreenProps {
   onComplete?: () => void;
@@ -17,6 +18,9 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
   useEffect(() => {
+    // 화면 조회 이벤트
+    logScreenView('loading');
+    
     // 페이드 인 애니메이션
     Animated.parallel([
       Animated.timing(fadeAnim, {

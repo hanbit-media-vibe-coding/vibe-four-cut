@@ -8,6 +8,9 @@
       "distribution": "internal",
       "ios": {
         "simulator": false
+      },
+      "android": {
+        "buildType": "apk"
       }
     },
     "preview": {
@@ -15,12 +18,32 @@
       "distribution": "internal",
       "ios": {
         "simulator": false
+      },
+      "android": {
+        "buildType": "apk"
       }
     },
-    "production": {}
+    "production": {
+      "ios": {
+        "simulator": false
+      },
+      "android": {
+        "buildType": "app-bundle"
+      }
+    }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "gmlcks00513@gmail.com",
+        "ascAppId": "6757453771",
+        "appleTeamId": "Y2M459JK4X"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./google-service-account.json",
+        "track": "internal"
+      }
+    }
   }
 }
 

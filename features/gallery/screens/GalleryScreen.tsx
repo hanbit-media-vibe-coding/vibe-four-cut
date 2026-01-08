@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { getUserComics, deleteComic, ComicListItem } from '../utils/galleryService';
 import { useAuth } from '../../../shared/contexts/AuthContext';
+import { GalleryEvents, logScreenView } from '../../../shared/utils/analytics';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ITEM_PADDING = 16;
@@ -64,6 +65,8 @@ export const GalleryScreen: React.FC<GalleryScreenProps> = ({
 
   // 초기 로드
   useEffect(() => {
+    logScreenView('gallery');
+    GalleryEvents.galleryView();
     loadComics();
   }, [user?.uid]);
 
@@ -98,6 +101,7 @@ export const GalleryScreen: React.FC<GalleryScreenProps> = ({
             
             try {
               await deleteComic(comic.id, user.uid);
+              GalleryEvents.comicDelete(comic.id);
               // 목록 새로고침
               await loadComics();
             } catch (error) {
@@ -115,7 +119,10 @@ export const GalleryScreen: React.FC<GalleryScreenProps> = ({
       <View style={styles.comicItemWrapper}>
         <TouchableOpacity
           style={styles.comicItem}
-          onPress={() => onComicPress?.(item)}
+          onPress={() => {
+            GalleryEvents.comicDetailView(item.id);
+            onComicPress?.(item);
+          }}
           activeOpacity={0.8}
         >
           <View style={styles.thumbnailContainer}>

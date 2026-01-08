@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { saveImageToGallery } from '../utils/imageSaveService';
+import { ComicEvents, logScreenView } from '../../../shared/utils/analytics';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const COMIC_PADDING = 24;
@@ -40,6 +41,10 @@ export const ComicResultScreen: React.FC<ComicResultScreenProps> = ({
   // 단일 이미지 URL 또는 배열의 첫 번째 이미지 사용
   const imageUrl = comicData?.imageUrl || comicData?.imageUrls?.[0] || DUMMY_IMAGE;
 
+  useEffect(() => {
+    logScreenView('comic_result');
+  }, []);
+
   const handleSavePhoto = async () => {
     if (isSaving) return;
     
@@ -48,6 +53,7 @@ export const ComicResultScreen: React.FC<ComicResultScreenProps> = ({
       const success = await saveImageToGallery(imageUrl);
       
       if (success) {
+        ComicEvents.comicSaveToGallery();
         Alert.alert('저장 완료', '만화가 갤러리에 저장되었습니다.', [
           { text: '확인', onPress: () => {} },
         ]);

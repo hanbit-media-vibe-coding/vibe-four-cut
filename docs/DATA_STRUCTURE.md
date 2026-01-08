@@ -294,3 +294,6 @@ comics/
 - `features/diary/types/index.ts`: 일기 관련 타입
 - `features/gallery/types/index.ts`: 갤러리 관련 타입
 
+
+
+
