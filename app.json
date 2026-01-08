@@ -44,12 +44,11 @@
     },
     "plugins": [
       "expo-web-browser",
-      "@react-native-firebase/app",
       [
-        "expo-build-properties",
+        "@react-native-firebase/app",
         {
           "ios": {
-            "useFrameworks": "dynamic"
+            "useFrameworks": "static"
           }
         }
       ]
