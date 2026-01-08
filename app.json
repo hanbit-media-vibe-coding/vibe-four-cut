@@ -49,10 +49,7 @@
         "expo-build-properties",
         {
           "ios": {
-            "useFrameworks": "static",
-            "podfileProperties": {
-              "useModularHeaders": true
-            }
+            "useFrameworks": "dynamic"
           }
         }
       ]
