@@ -12,4 +12,4 @@
 // export const GEMINI_API_KEY = Constants.expoConfig?.extra?.geminiApiKey || process.env.GEMINI_API_KEY;
 
 // 임시: API 키 직접 설정 (실제 배포 시 제거 필요)
-export const GEMINI_API_KEY = 'AIzaSyCYNx5TMv-2cPsPIBdHCZ6PuG0c_HQXNxY';
+export const GEMINI_API_KEY = '';
